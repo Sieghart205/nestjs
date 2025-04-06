@@ -1,7 +1,19 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
+import { createUserDto } from './dto/create-user.dto';
+import { updateUserDto } from './dto/update-user.dto';
 
-@Controller({})
+@Controller('users')
 export class UsersController {
   userService: UsersService;
 
@@ -9,13 +21,33 @@ export class UsersController {
     this.userService = usersService;
   }
 
-  @Get('/users')
+  @Get()
   async UsersController() {
     return await this.userService.getUsers();
   }
 
-  @Post('/users')
-  async UsersPostController(@Body() data: any) {
+  @Post()
+  @UsePipes(new ValidationPipe())
+  async UsersPostController(@Body() data: createUserDto) {
     return await this.userService.createUsers(data);
+  }
+
+  @Get('/:id')
+  async UsersGetController(@Param('id') id: string) {
+    return await this.userService.getUserById(parseInt(id));
+  }
+
+  @Put('/:id')
+  @UsePipes(new ValidationPipe())
+  async UsersPutController(
+    @Param('id') id: string,
+    @Body() data: updateUserDto,
+  ) {
+    return await this.userService.updateUser(parseInt(id), data);
+  }
+
+  @Delete('/:id')
+  async UsersDeleteController(@Param('id') id: string) {
+    return await this.userService.deleteUser(parseInt(id));
   }
 }
