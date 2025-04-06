@@ -3,7 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -25,21 +27,23 @@ export class UsersController {
   }
 
   @Post()
+  @HttpCode(201)
   async UsersPostController(@Body() data: createUserDto) {
     return await this.userService.createUsers(data);
   }
 
   @Get('/:id')
-  async UsersGetController(@Param('id') id: string) {
-    return await this.userService.getUserById(parseInt(id));
+  async UsersGetController(@Param('id', ParseIntPipe) id: number) {
+    return await this.userService.getUserById(id);
   }
 
   @Put('/:id')
+  @HttpCode(202)
   async UsersPutController(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() data: updateUserDto,
   ) {
-    return await this.userService.updateUser(parseInt(id), data);
+    return await this.userService.updateUser(id, data);
   }
 
   @Delete('/:id')
