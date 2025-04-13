@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from 'libs/prisma';
+import { CreateProject } from './dto/create-project.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -13,7 +14,7 @@ export class ProjectsService {
     return data;
   }
 
-  async createProject(data: any) {
+  async createProject(data: CreateProject) {
     const query = await prisma.project.create({
       data: data,
     });
